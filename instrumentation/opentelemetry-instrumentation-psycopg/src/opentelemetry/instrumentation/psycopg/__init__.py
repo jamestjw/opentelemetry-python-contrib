@@ -267,6 +267,11 @@ class DatabaseApiIntegration(dbapi.DatabaseApiIntegration):
         kwargs["cursor_factory"] = _new_cursor_factory(**new_factory_kwargs)
         connection = connect_method(*args, **kwargs)
         self.get_connection_attributes(connection)
+
+        connection.server_cursor_factory = _new_cursor_factory(
+            db_api=self, base_factory=getattr(connection, "server_cursor_factory", None)
+        )
+
         return connection
 
 
